@@ -1,3 +1,12 @@
+# GraphQL Demo with Last.FM Data
+
+`Postgresql` / `GraphQL` / `Express` / `TypeScript` / `Docker`
+
+Demo of GraphQL using personal [Last.FM](https://www.last.fm/)
+data
+
+_TODO: Clean the README up_
+
 ## `Initial db setup`
 
 ```bash

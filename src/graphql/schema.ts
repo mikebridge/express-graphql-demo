@@ -1,7 +1,7 @@
 import { makeExecutableSchema } from '@graphql-tools/schema';
 //import { DateTimeResolver } from 'graphql-scalars';n
 //import { Context } from './context';
-import { PrismaClient, Artist, Album, Track } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Context } from './context';
 import { DateTimeResolver } from 'graphql-scalars';
 
@@ -28,6 +28,7 @@ const typeDefs = `
     allArtists: [Artist!]!
     allAlbums: [Album!]!
     allTracks: [Track!]!
+    searchTracks(searchString: String, skip: Int, take: Int): [Track!]!
   }
   enum SortOrder {
     asc
@@ -99,12 +100,7 @@ const typeDefs = `
 // `
 
 const resolvers = {
-  // https://stackoverflow.com/questions/54047369/prisma-api-returns-relation-but-client-returns-cannot-return-null-for-non-nulla
   Query: {
-    // allAlbums: (_parent, _args, context: Context) => {
-    //   const prisma: PrismaClient = context.prisma;
-    //   return prisma.album.findMany();
-    // },
     allArtists: (_parent, _args, context: Context) => {
       const prisma: PrismaClient = context.prisma;
       return prisma.artist.findMany();
@@ -117,24 +113,29 @@ const resolvers = {
       const prisma: PrismaClient = context.prisma;
       return prisma.track.findMany();
     },
-
     // postById: (_parent, args: { id: number }, context: Context) => {
     //   return context.prisma.post.findUnique({
     //     where: { id: args.id || undefined }
     //   })
     // },
-    // feed: (_parent, args: {
-    //   searchString: string,
-    //   skip: number,
-    //   take: number,
-    //   orderBy: PostOrderByUpdatedAtInput,
-    // }, context: Context) => {
-    //   const or = args.searchString ? {
-    //     OR: [
-    //       { title: { contains: args.searchString } },
-    //       { content: { contains: args.searchString } }
-    //     ]
-    //   } : {}
+    searchTracks(
+      _parent,
+      args: {
+        searchString: string;
+        skip: number;
+        take: number;
+      },
+      context: Context
+    ) {
+      return context.prisma.track.findMany({
+        where: {
+          ...(args.searchString ? { name: { contains: args.searchString } } : {})
+        },
+        take: args?.take,
+        skip: args?.skip
+        // orderBy: args?.orderBy
+      });
+    }
     //
     //   return context.prisma.post.findMany({
     //     where: {
@@ -226,54 +227,37 @@ const resolvers = {
     albums: (parent, _args, context: Context) => {
       return context.prisma.artist
         .findUnique({
-          where: { id: parent?.id },
+          where: { id: parent?.id }
         })
         .albums();
-    },
+    }
   },
   Album: {
     artist: (parent, _args, context: Context) => {
-      console.log('Getting artist');
       const prisma: PrismaClient = context.prisma;
       return prisma.album
         .findUnique({
-          where: { id: parent?.id },
+          where: { id: parent?.id }
         })
         .artist();
     },
     tracks: (parent, _args, context: Context) => {
-      console.log(`Finding album ${parent.id}`);
       const result = context.prisma.album.findUnique({
-        where: { id: parent?.id },
+        where: { id: parent?.id }
       });
       return result.tracks();
-    },
+    }
   },
   Track: {
     album: (parent, _args, context: Context) => {
-      console.log('Getting album for track');
       const prisma: PrismaClient = context.prisma;
       return prisma.track
         .findUnique({
-          where: { id: parent?.id },
+          where: { id: parent?.id }
         })
         .album();
-    },
-  },
-  // Post: {
-  //   author: (parent, _args, context: Context) => {
-  //     return context.prisma.post.findUnique({
-  //       where: { id: parent?.id }
-  //     }).author()
-  //   }
-  // },
-  // User: {
-  //   posts: (parent, _args, context: Context) => {
-  //     return context.prisma.user.findUnique({
-  //       where: { id: parent?.id }
-  //     }).posts()
-  //   }
-  // }
+    }
+  }
 };
 
 // enum SortOrder {
@@ -303,5 +287,5 @@ const resolvers = {
 
 export const schema = makeExecutableSchema({
   resolvers,
-  typeDefs,
+  typeDefs
 });

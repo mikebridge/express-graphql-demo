@@ -36,10 +36,10 @@ class App {
 
   public listen() {
     this.app.listen(this.port, () => {
-      logger.info(`=================================`);
-      logger.info(`======= ENV: ${this.env} =======`);
-      logger.info(`🚀 App listening on the port ${this.port}`);
-      logger.info(`=================================`);
+      logger.info(`-----------------------------`);
+      logger.info(`ENV: ${this.env}`);
+      logger.info(`🙂 listening on port ${this.port} 🙂`);
+      logger.info(`-----------------------------`);
     });
   }
 
@@ -84,8 +84,8 @@ class App {
       graphqlHTTP({
         schema,
         context,
-        graphiql: true,
-      }),
+        graphiql: true
+      })
     );
   }
 
@@ -95,10 +95,10 @@ class App {
         info: {
           title: 'REST API',
           version: '1.0.0',
-          description: 'Example docs',
-        },
+          description: 'Example docs'
+        }
       },
-      apis: ['swagger.yaml'],
+      apis: ['swagger.yaml']
     };
 
     const specs = swaggerJSDoc(options);
