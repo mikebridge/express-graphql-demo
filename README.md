@@ -1,6 +1,6 @@
 # GraphQL Demo with Last.FM Data
 
-`Postgresql` / `GraphQL` / `Express` / `TypeScript` / `Docker`
+`Postgresql` / `GraphQL` / `Prisma` / `Express` / `TypeScript` / `Docker`
 
 Demo of GraphQL using personal [Last.FM](https://www.last.fm/)
 data
