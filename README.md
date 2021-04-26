@@ -56,4 +56,18 @@ ON "Album"."artistId" = "Artist".id
 AND "Scrobble".artist = "Artist".name;
 ```
 
+Navigate to [http://localhost:3000/graphql](http://localhost:3000/graphql)
 
+Try some queries like:
+```graphql
+  {
+  	searchTracks(searchString:"Hello"){
+    	name,
+    	album{
+        artist {
+          name
+        }
+      }
+    }
+  }
+```
