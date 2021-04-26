@@ -1,0 +1,52 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id String  @id @db.Uuid @default(dbgenerated("uuid_generate_v1()"))
+  email String  @unique
+  givenname  String?
+  familyname String?
+  password   String
+}
+
+model Scrobble {
+  id        String  @id @db.Uuid @default(dbgenerated("uuid_generate_v1()"))
+  artist    String
+  album     String?
+  track     String
+  datecreated DateTime
+}
+
+model Artist {
+  id        String  @id @db.Uuid @default(dbgenerated("uuid_generate_v1()"))
+  name      String
+  albums    Album[]
+  @@index([name])
+}
+
+model Album {
+  id        String  @id @db.Uuid @default(dbgenerated("uuid_generate_v1()"))
+  artistId  String  @db.Uuid
+  name      String
+  tracks    Track[]
+  artist    Artist   @relation(fields: [artistId], references: [id])
+  @@index([name])
+}
+
+model Track {
+  id        String  @id @db.Uuid @default(dbgenerated("uuid_generate_v1()"))
+  albumId   String  @db.Uuid
+  name      String
+  album     Album   @relation(fields: [albumId], references: [id])
+  @@index([name])
+}
+
+
+generator client {
+  provider = "prisma-client-js"
+}

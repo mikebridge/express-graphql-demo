@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+# npx prisma migrate --name init
+
+docker-compose run --rm server npx prisma migrate "$@"
