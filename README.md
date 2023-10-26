@@ -1,11 +1,11 @@
 # GraphQL Demo with Last.FM Data
 
+_(Oct 26, 2023): This demo is deprecated in favour of [this rewrite with nestjs + apollo](https://github.com/mikebridge/nestjs-scrobbled)_
+
 `Postgresql` / `GraphQL` / `Prisma` / `Express` / `TypeScript` / `Docker`
 
 Demo of GraphQL using personal [Last.FM](https://www.last.fm/)
 data
-
-_TODO: Clean the README up_
 
 ## `Initial db setup`
 
